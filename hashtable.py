@@ -9,7 +9,7 @@ class Bucket:
 
     def __init__(self, item: Package = None):
         self.item = item
-        self.key = item.get_id() if item is not None else None
+        self.key = hash(item) if item is not None else None
 
     def is_empty(self):
         if self is Bucket.EMPTY_SINCE_START:
