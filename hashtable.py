@@ -43,8 +43,9 @@ class Hashtable:
                 self.table[i] = bucket_item
                 return
 
-        # If we get here, the table is full and needs to be resized.
-        self.resize()
+        # If we get here, the table is full and needs to be resized and then add
+        # the item into the table.
+        self.resize(bucket_item)
 
     def get(self, key):
 
@@ -71,8 +72,8 @@ class Hashtable:
 
         return None
 
-    def resize(self):
-        self.size *= 1.5
+    def resize(self, new_bucket_item):
+        self.size *= 2
         temp_table = [Bucket.EMPTY_SINCE_START] * self.size
         for bucket in self.table:
             if not bucket.is_empty():
@@ -81,4 +82,10 @@ class Hashtable:
                     if self.table[index].is_empty():
                         self.table[i] = bucket
                         return
+
+        for i in range(self.size):
+            index = (new_bucket_item.get_id() + i + i * i) % self.size
+            if self.table[index].is_empty():
+                self.table[i] = new_bucket_item
+                return
         self.table = temp_table
