@@ -9,7 +9,7 @@ class Bucket:
 
     def __init__(self, item: Package = None):
         self.item = item
-        self.key = item.get_id()
+        self.key = item.get_id() if item is not None else None
 
     def is_empty(self):
         if self is Bucket.EMPTY_SINCE_START:
@@ -23,7 +23,7 @@ class Bucket:
         return self is Bucket.EMPTY_AFTER_REMOVAL
 
     def get_id(self):
-        return self.key
+        return self.key if self.item is not None else None
 
 Bucket.EMPTY_SINCE_START = Bucket()
 Bucket.EMPTY_AFTER_REMOVAL = Bucket()
@@ -47,10 +47,38 @@ class Hashtable:
         self.resize()
 
     def get(self, key):
-        pass
+
+        for i in range(self.size):
+            index = (hash(key) + i + i * i) % self.size
+            if self.table[index].get_id() == key:
+                return self.table[index].item
+            elif self.table[index].is_emtpy_since_start():
+                return None
+        return None
 
     def remove(self, key):
-        pass
+
+        for i in range(self.size):
+            index = (hash(key) + i + i * i) % self.size
+
+            if self.table[index].is_emtpy_since_start():
+                return None
+
+            if self.table[index].get_id() == key:
+                item_holder = self.table[index].item
+                self.table[index] = Bucket.EMPTY_AFTER_REMOVAL
+                return item_holder
+
+        return None
 
     def resize(self):
-        pass
+        self.size *= 1.5
+        temp_table = [Bucket.EMPTY_SINCE_START] * self.size
+        for bucket in self.table:
+            if not bucket.is_empty():
+                for i in range(self.size):
+                    index = (bucket.get_id() + i + i * i) % self.size
+                    if self.table[index].is_empty():
+                        self.table[i] = bucket
+                        return
+        self.table = temp_table
