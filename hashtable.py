@@ -1,5 +1,6 @@
 from package import Package
 
+# Because each package has a unique id, we can use that as the hash key.
 def hash(item: Package):
     return item.get_id()
 
@@ -25,15 +26,20 @@ class Bucket:
     def get_id(self):
         return self.key if self.item is not None else None
 
+# These are the two types of empty buckets that will be used.
 Bucket.EMPTY_SINCE_START = Bucket()
 Bucket.EMPTY_AFTER_REMOVAL = Bucket()
 
+# This is the hash table class that will store the packages.
 class Hashtable:
 
     def __init__(self, initial_size=40):
         self.table = [Bucket.EMPTY_SINCE_START] * initial_size
         self.size = initial_size
 
+    # This is the insert function that will create a new bucket for an item, then insert
+    # it into the table quadratically. If the table is full, it will resize the table
+    # and then insert the item into the table.
     def insert(self, item: Package):
         bucket_item = Bucket(item)
 
@@ -47,16 +53,24 @@ class Hashtable:
         # the item into the table.
         self.resize(bucket_item)
 
-    def get(self, key):
+    # Here is where we will be able to grab a requested item from the table!
+    # Note, because we are directly hashing the item id, we can use that as the key.
+    # Also, because we are using a quadratic probing technique, we will need to
+    # check each bucket via quadratic probing until the key is found, or the bucket is
+    # empty since start.
+    def get(self, item_id):
 
         for i in range(self.size):
-            index = (hash(key) + i + i * i) % self.size
-            if self.table[index].get_id() == key:
+            index = (item_id + i + i * i) % self.size
+            if self.table[index].get_id() == item_id:
                 return self.table[index].item
             elif self.table[index].is_emtpy_since_start():
                 return None
         return None
 
+    # This is the remove function that will remove an item from the table.
+    # It will do this by checking each bucket via quadratic probing until the key is found,
+    # or the bucket is empty since start. (For our purposes, this will most likely not be used.
     def remove(self, key):
 
         for i in range(self.size):
@@ -72,6 +86,9 @@ class Hashtable:
 
         return None
 
+    # This is the resize function that will resize the table. It will do this by
+    # creating a new table with twice the size of the old table, and then inserting
+    # the new bucket into the new table.
     def resize(self, new_bucket_item):
         self.size *= 2
         temp_table = [Bucket.EMPTY_SINCE_START] * self.size
