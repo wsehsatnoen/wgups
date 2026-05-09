@@ -56,7 +56,7 @@ def special_handling(package: Package):
     package.set_status(Status.RECEIVED)
 
 # This function is where we pair packages that must be delivered with one another for shipping purposes.
-# It will add the package id to the set of packages that must be paired, and then add the package ids of the packages that must be paired.
+# It will add the package id to the set of packages that must be paired and then add the package ids of the packages that must be paired.
 def package_pairer(package: Package):
     if package.get_required_packages_to_pair():
         packages_to_pair.add(package.get_id())
