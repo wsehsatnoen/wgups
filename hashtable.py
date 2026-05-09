@@ -41,17 +41,14 @@ class Hashtable:
     # it into the table quadratically. If the table is full, it will resize the table
     # and then insert the item into the table.
     def insert(self, item: Package):
-        bucket_item = Bucket(item)
-
         for i in range(self.size):
             index = (hash(item) + i + i * i) % self.size
             if self.table[index].is_empty():
-                self.table[i] = bucket_item
+                self.table[index] = Bucket(item)
                 return
-
         # If we get here, the table is full and needs to be resized and then add
         # the item into the table.
-        self.resize(bucket_item)
+        self.resize(item)
 
     # Here is where we will be able to grab a requested item from the table!
     # Note, because we are directly hashing the item id, we can use that as the key.
