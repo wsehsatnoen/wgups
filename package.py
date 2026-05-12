@@ -54,6 +54,8 @@ class Package(PackageBucket):
         self.weight = weight
         self.notes = notes
 
+        self.required_truck = None
+
         self.status = Status.LABEL_CREATED
         self.delivered_time = None
 
@@ -73,8 +75,8 @@ class Package(PackageBucket):
         if status == Status.DELIVERED:
             self.delivered_time = delivered_time
 
-    def add_required_package(self, package_id: int):
-        self.required_package_set.add(package_id)
+    def update_required_truck(self, required_truck):
+        self.required_truck = required_truck
 
     # Getters
     def get_id(self):

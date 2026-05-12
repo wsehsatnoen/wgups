@@ -19,7 +19,7 @@ def handle_package(package):
     if package.get_id() in delayed_package_ids:
         return
     address_mixer(package)
-    if package.get_id() in special_case_packages:
+    if package.get_id() in paired_packages or package.get_id() in truck_two_packages:
         return
     loading_queue.append(package.get_id())
 
@@ -32,13 +32,14 @@ def update_deadline(package):
 def handle_notes(package):
     note = package.get_notes()
     if "Can only be on truck 2" in note:
-        special_case_packages.append(package.get_id())
+        truck_two_packages.append(package.get_id())
+        package.update_required_truck(2)
         return
     if "Must be delivered with" in note:
         paired_package = [int(package_id) for package_id in re.findall(r'\d+', note)]
-        special_case_packages.append(package.get_id())
+        paired_packages.append(package.get_id())
         for i in paired_package:
-            special_case_packages.append(i)
+            paired_packages.append(i)
         return
     if "Delayed on flight" in note:
         package.update_status(Status.LABEL_CREATED)

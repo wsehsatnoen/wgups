@@ -2,32 +2,88 @@ import math
 
 from dijkstras import dijkstras, get_route_distance
 from global_variables import *
-from locations import distances, locations
+from locations import *
+from receiving import address_mixer
 
 
-def build_special_case_shipment():
+def build_special_case_shipment_paired():
     manifest = {}
     remove_from_lists = []
-    for package_id in special_case_packages:
+    capacity = 0
+    holder = None
+
+    for package_id in paired_packages:
         package = wgups_table.get_bucket(package_id)
         same_address_packages = addresses[package.get_address()]
+
         if package.get_address() not in manifest:
+            for i in same_address_packages:
+                if i in truck_two_packages:
+                    same_address_packages.remove(i)
+                    holder = i
             manifest[package.get_address()] = [package.get_deadline(), same_address_packages]
-        remove_from_lists.extend(same_address_packages)
+            capacity += len(same_address_packages)
+            remove_from_lists.extend(same_address_packages)
+
 
     for package_id in remove_from_lists:
-        special_case_packages.remove(package_id) if package_id in special_case_packages else None
+        loading_queue.remove(package_id) if package_id in loading_queue else None
+        if wgups_table.get_bucket(package_id).get_address() in addresses:
+            del addresses[wgups_table.get_bucket(package_id).get_address()]
+
+    address_mixer(holder) if holder else None
+
+    manifest = build_express_shipment(manifest, capacity)
+
+    return manifest
+
+def build_special_case_shipment_truck():
+    manifest = {}
+    remove_from_lists = []
+    current_capacity = 0
+
+    for package_id in truck_two_packages:
+        package = wgups_table.get_bucket(package_id)
+        same_address_packages = addresses[package.get_address()]
+
+        if current_capacity + len(same_address_packages) <= 16 and package.get_address() not in manifest:
+            manifest[package.get_address()] = [package.get_deadline(), same_address_packages]
+            current_capacity += len(same_address_packages)
+            remove_from_lists.extend(same_address_packages)
+
+    for package_id in remove_from_lists:
+        loading_queue.remove(package_id) if package_id in loading_queue else None
+        if wgups_table.get_bucket(package_id).get_address() in addresses:
+            del addresses[wgups_table.get_bucket(package_id).get_address()]
+
+    manifest = build_regular_shipment(manifest, current_capacity)
+
+    return manifest
+
+def build_express_shipment(manifest = None, current_capacity = 0):
+    manifest = manifest if manifest else {}
+    remove_from_lists = []
+    current_capacity = current_capacity if current_capacity else 0
+
+    for package_id in loading_queue:
+        package = wgups_table.get_bucket(package_id)
+        same_address_packages = addresses[package.get_address()]
+        if current_capacity + len(same_address_packages) <= 16 and package.get_address() not in manifest and package.get_deadline() < datetime.time(17, 0):
+            manifest[package.get_address()] = [package.get_deadline(), same_address_packages]
+            current_capacity += len(same_address_packages)
+            remove_from_lists.extend(same_address_packages)
+
+    for package_id in remove_from_lists:
         loading_queue.remove(package_id) if package_id in loading_queue else None
         if wgups_table.get_bucket(package_id).get_address() in addresses:
             del addresses[wgups_table.get_bucket(package_id).get_address()]
 
     return manifest
 
-
-def build_regular_shipment():
-    manifest = {}
+def build_regular_shipment(manifest = None, current_capacity = 0):
+    manifest = manifest if manifest else {}
     remove_from_lists = []
-    current_capacity = 0
+    current_capacity = current_capacity if current_capacity else 0
     
     for package_id in loading_queue:
         package = wgups_table.get_bucket(package_id)

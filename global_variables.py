@@ -3,7 +3,8 @@ import datetime
 from hashtable import HashTable
 
 wgups_table = HashTable()
-special_case_packages = []
+paired_packages = []
+truck_two_packages = []
 delayed_package_ids = set()
 addresses = {}
 loading_queue = []
