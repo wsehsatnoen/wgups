@@ -9,20 +9,25 @@ print(wgups_table)
 print_addresses()
 
 shipments.append(build_special_case_shipment_truck())
+shipments.append(build_special_case_shipment_paired())
 
-route_one, route_dis_one = build_route(shipments[0])
-print_route(route_one, route_dis_one)
+delayed_package_handler(datetime.time(9, 5))
 
 shipments.append(build_express_shipment())
-route_two, route_dis_two = build_route(shipments[1])
-print_route(route_two, route_dis_two)
 
-shipments.append(build_special_case_shipment_paired())
-route_three, route_dis_three = build_route(shipments[2])
-print_route(route_three, route_dis_three)
+delayed_package_handler(datetime.time(10, 20))
+
+shipments.append(build_regular_shipment())
 
 print_shipments()
+print_loading_queue()
 
-print(route_dis_one)
+for shipment in shipments:
+    route, route_distance = build_route(shipment)
+    print_route(route, route_distance)
+    print("----------------")
+    miles_driven += route_distance
+
+print(f"Miles Driven: {miles_driven} miles")
 
 

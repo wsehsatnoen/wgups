@@ -31,12 +31,6 @@ with open("distances.csv", "r") as csvfile:
             distance_matrix[row_index][col_index] = distance
             distance_matrix[col_index][row_index] = distance
 
-all_pairs_shortest_path = floyd_warshall(distance_matrix, num_addresses)
-
 def print_matrix():
     for row in distance_matrix:
-        print(row)
-
-def print_all_pairs_shortest_path():
-    for row in all_pairs_shortest_path:
         print(row)

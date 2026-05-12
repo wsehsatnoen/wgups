@@ -10,17 +10,12 @@ def build_special_case_shipment_paired():
     manifest = {}
     remove_from_lists = []
     capacity = 0
-    holder = None
 
     for package_id in paired_packages:
         package = wgups_table.get_bucket(package_id)
         same_address_packages = addresses[package.get_address()]
 
         if package.get_address() not in manifest:
-            for i in same_address_packages:
-                if i in truck_two_packages:
-                    same_address_packages.remove(i)
-                    holder = i
             manifest[package.get_address()] = [package.get_deadline(), same_address_packages]
             capacity += len(same_address_packages)
             remove_from_lists.extend(same_address_packages)
@@ -30,10 +25,6 @@ def build_special_case_shipment_paired():
         loading_queue.remove(package_id) if package_id in loading_queue else None
         if wgups_table.get_bucket(package_id).get_address() in addresses:
             del addresses[wgups_table.get_bucket(package_id).get_address()]
-
-    address_mixer(holder) if holder else None
-
-    manifest = build_express_shipment(manifest, capacity)
 
     return manifest
 
@@ -55,8 +46,6 @@ def build_special_case_shipment_truck():
         loading_queue.remove(package_id) if package_id in loading_queue else None
         if wgups_table.get_bucket(package_id).get_address() in addresses:
             del addresses[wgups_table.get_bucket(package_id).get_address()]
-
-    manifest = build_regular_shipment(manifest, current_capacity)
 
     return manifest
 
