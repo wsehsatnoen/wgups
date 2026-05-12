@@ -11,7 +11,6 @@ def receive_package():
             package = Package(row['id'], row['address'], row['city'], row['state'], row['zipcode'], row['delivery_deadline'], row['weight'], row['notes'])
             wgups_table.insert(package)
             handle_package(package)
-    sort_loading_queue()
 
 def handle_package(package):
     update_deadline(package)
@@ -19,9 +18,12 @@ def handle_package(package):
     if package.get_id() in delayed_package_ids:
         return
     address_mixer(package)
-    if package.get_id() in paired_packages or package.get_id() in truck_two_packages:
+    if package.get_id() in truck_two_packages or package.get_id() in paired_packages:
         return
-    loading_queue.append(package.get_id())
+    if package.get_deadline() < datetime.time(17, 00):
+        priority_set.add(package.get_id())
+        return
+    loading_queue.add(package.get_id())
 
 def update_deadline(package):
     if "EOD" in package.deadline:
@@ -32,14 +34,18 @@ def update_deadline(package):
 def handle_notes(package):
     note = package.get_notes()
     if "Can only be on truck 2" in note:
-        truck_two_packages.append(package.get_id())
+        truck_two_packages.add(package.get_id())
         package.update_required_truck(2)
         return
     if "Must be delivered with" in note:
         paired_package = [int(package_id) for package_id in re.findall(r'\d+', note)]
-        paired_packages.append(package.get_id())
+        paired_packages.add(package.get_id())
         for i in paired_package:
-            paired_packages.append(i)
+            paired_packages.add(i) if i not in paired_packages else None
+            if i in loading_queue:
+                loading_queue.remove(i)
+            if i in priority_set:
+                priority_set.remove(i)
         return
     if "Delayed on flight" in note:
         package.update_status(Status.LABEL_CREATED)
@@ -54,15 +60,17 @@ def handle_notes(package):
 def address_mixer(package):
     address = package.get_address()
     if address in addresses:
-        addresses[address].append(package.get_id())
+        if package.get_deadline() < addresses[address][0]:
+            addresses[address][0] = package.get_deadline()
+        addresses[address][1].append(package.get_id())
     else:
-        addresses[address] = [package.get_id()]
+        addresses[address] = [package.get_deadline(), [package.get_id()]]
 
 def delayed_package_handler(time):
     if time == datetime.time(10, 20):
         wgups_table.get_bucket(9).update_address("410 S State St", "Salt Lake City", "UT", "84111")
         wgups_table.get_bucket(9).update_status(Status.AT_HUB)
-        loading_queue.append(9)
+        loading_queue.add(9)
         address_mixer(wgups_table.get_bucket(9))
     if time == datetime.time(9, 5):
         for package_id in delayed_package_ids:
@@ -70,6 +78,8 @@ def delayed_package_handler(time):
                 continue
             package = wgups_table.get_bucket(package_id)
             package.update_status(Status.AT_HUB)
-            loading_queue.append(package_id)
+            if package.get_deadline() < datetime.time(17, 00):
+                priority_set.add(package_id)
+            else:
+                loading_queue.add(package_id)
             address_mixer(package)
-    sort_loading_queue()
