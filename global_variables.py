@@ -26,6 +26,9 @@ def print_manifest(manifest):
     for address, info in manifest.items():
         print(f"Address: {address} || Deadline: {info[0]} || Packages: {info[1]}")
 
+def print_route(route, route_distance):
+    print(f"Route: {route} || Distance: {route_distance} miles")
+
 def sort_loading_queue():
     loading_queue.sort(key=lambda x: wgups_table.get_bucket(x).get_deadline())
 

@@ -1,7 +1,8 @@
 import math
-from random import random
 
+from dijkstras import dijkstras, get_route_distance
 from global_variables import *
+from locations import distances, locations
 
 
 def build_special_case_shipment():
@@ -45,7 +46,23 @@ def build_regular_shipment():
     return manifest
 
 def build_route(manifest):
-    address_order = []
-    for address, info in manifest.get_items():
-        pass
-    return address_order
+    priority_list = []
+    non_priority_list = []
+
+    route = []
+
+    for address, info in manifest.items():
+        if info[0] < datetime.time(17, 0):
+            priority_list.append(address)
+        else:
+            non_priority_list.append(address)
+
+    route.extend(dijkstras(priority_list))
+    route.extend(dijkstras(non_priority_list))
+
+    route.insert(0, "HUB")
+    route.append("HUB")
+
+    distance = get_route_distance(route)
+
+    return route, distance
