@@ -1,64 +1,60 @@
 import csv
-import re
 import datetime
-# from time_machine import TimeMachine, time_machine
-
+import re
 from package import Package, Status
+from global_variables import *
 
-delayed_packages = []
-packages_to_pair = set()
-
-# This function is where the magic happens. It will receive all the packages from the file and give the proper handling necessary.
-# Included on the bottom is the final case for pairing packages that must be delivered with one another for shipping purposes.
-def receive_packages(hashtable):
-    with open('packages.csv', 'r') as csvfile:
+def receive_package():
+    with open("packages.csv", "r") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            package = Package(row['id'], row['address'], row['city'], row['state'], row['zipcode'], row['delivery_deadline'], row['weight'], row['notes'], Status.CREATED)
-            special_handling(package)
-            hashtable.insert(package)
-    for package_id in packages_to_pair:
-        hashtable.get(package_id).set_required_packages_to_pair(packages_to_pair)
+            package = Package(row['id'], row['address'], row['city'], row['state'], row['zipcode'], row['delivery_deadline'], row['weight'], row['notes'])
+            wgups_table.insert(package)
+            handle_package(package)
+    sort_loading_queue()
 
-# This function is where we handle the special cases that may arise. It will determine if the package is required for a specific truck,
-# packages that must be delivered with one another, if the package is delayed to the facility, and even if the address is wrong.
-def special_handling(package: Package):
-    note = package.get_special_notes()
+def handle_package(package):
+    update_deadline(package)
+    handle_notes(package)
+    address_mixer(package)
+    if any(package.get_id() in x for x in [delayed_package_ids, special_case_packages]):
+        return
+    loading_queue.append([package.get_id(), package.get_deadline()])
+
+def update_deadline(package):
+    if "EOD" in package.deadline:
+        package.deadline = datetime.time(17, 00)
+    else:
+        package.deadline = datetime.datetime.strptime(package.deadline, "%I:%M %p").time()
+
+def handle_notes(package):
+    note = package.get_notes()
     if "Can only be on truck 2" in note:
         package.set_required_truck(2)
+        special_case_packages.add(package.get_id())
+        return
     if "Must be delivered with" in note:
-        paired_package_ids = [int(package_id) for package_id in re.findall(r'\d+', note)]
-        package.set_required_packages_to_pair(paired_package_ids)
-        package_pairer(package)
+        paired_package = [int(package_id) for package_id in re.findall(r'\d+', note)]
+        special_case_packages.add(package.get_id())
+        for i in paired_package:
+            special_case_packages.add(i)
+        return
     if "Delayed on flight" in note:
-        if package.get_id() in delayed_packages:
-            if time_machine.get_simulation_time() == datetime.time(9, 5):
-                package.set_status(Status.RECEIVED)
-            return
-        package.set_status(Status.CREATED)
-        package.set_receiving_eta(datetime.time(9, 5))
-        delayed_packages.append(package.get_id())
+        package.update_status(Status.LABEL_CREATED)
+        delayed_package_ids.add(package.get_id())
         return
     if "Wrong address listed" in note:
-        if package.get_id() in delayed_packages:
-            if time_machine.get_simulation_time() > datetime.time(10, 20):
-                package.set_delivery_address("410 S. State St.")
-                package.set_delivery_city("Salt Lake City")
-                package.set_delivery_state("UT")
-                package.set_delivery_zip("84111")
-                package.set_status(Status.RECEIVED)
-                return
-        package.set_status(Status.CREATED)
-        delayed_packages.append(package.get_id())
-        package.set_receiving_eta(datetime.time(10, 20))
+        package.update_status(Status.LABEL_CREATED)
+        package.update_address(None, None, None, None)
+        delayed_package_ids.add(package.get_id())
         return
 
-    package.set_status(Status.RECEIVED)
+def address_mixer(package):
+    address = package.get_address()
+    if address in addresses:
+        addresses[address].append(package.get_id())
+    else:
+        addresses[address] = [package.get_id()]
 
-# This function is where we pair packages that must be delivered with one another for shipping purposes.
-# It will add the package id to the set of packages that must be paired and then add the package ids of the packages that must be paired.
-def package_pairer(package: Package):
-    if package.get_required_packages_to_pair():
-        packages_to_pair.add(package.get_id())
-        for package_id in package.get_required_packages_to_pair():
-            packages_to_pair.add(package_id)
+def delayed_package_handler():
+    pass

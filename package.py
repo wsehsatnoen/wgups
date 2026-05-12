@@ -1,74 +1,108 @@
 from enum import Enum
+from datetime import datetime
 
+# For type safety, the use of this Enum class prevents problems.
 class Status(Enum):
-    CREATED = "created"
-    RECEIVED = "received"
-    LOADED = "loaded"
-    EN_ROUTE = "en_route"
-    DELIVERED = "delivered"
+    LABEL_CREATED = "Label Created"
+    AT_HUB = "At Hub"
+    LOADED = "Loaded"
+    EN_ROUTE= "En Route"
+    DELIVERED = "Delivered"
 
-class Package:
+    # Will turn it into a string when printed.
+    def __str__(self):
+        return self.value
 
-    def __init__(self, id, delivery_address, delivery_city, delivery_state, delivery_zip, delivery_deadline, package_weight, special_notes,
-                 status: Status):
-        self.id = int(id)
-        self.delivery_address = delivery_address
-        self.delivery_city = delivery_city
-        self.delivery_state = delivery_state
-        self.delivery_zip = delivery_zip
-        self.delivery_deadline = delivery_deadline
-        self.package_weight = package_weight
-        self.special_notes = special_notes
-        self.receiving_eta = None
-        self.status = status.CREATED
-        self.required_truck = None
-        self.required_packages_to_pair = set()
+# This will be used for ease of functionality with the hash table. Instead of creating
+# a new class for the buckets, the packages themselves will be buckets and these will take
+# the place of empty buckets.
+class PackageBucket:
 
-    def set_status(self, status: Status):
-        self.status = status
+    def is_empty(self):
+        if self is PackageBucket.EMPTY_SINCE_START:
+            return True
+        return self is PackageBucket.EMPTY_AFTER_REMOVAL
 
-    def set_required_truck(self, required_truck):
-        self.required_truck = required_truck
+    def is_empty_since_start(self):
+        return self is PackageBucket.EMPTY_SINCE_START
 
-    def set_required_packages_to_pair(self, required_package_to_pair):
-        for package_id in required_package_to_pair:
-            self.required_packages_to_pair.add(package_id)
-
-    def set_delivery_address(self, delivery_address):
-        self.delivery_address = delivery_address
-    def set_delivery_city(self, delivery_city):
-        self.delivery_city = delivery_city
-    def set_delivery_state(self, delivery_state):
-        self.delivery_state = delivery_state
-    def set_delivery_zip(self, delivery_zip):
-        self.delivery_zip = delivery_zip
-    def set_receiving_eta(self, receiving_eta):
-        self.receiving_eta = receiving_eta
-
-    def get_id(self):
-        return self.id
-    def get_delivery_address(self):
-        return self.delivery_address
-    def get_delivery_city(self):
-        return self.delivery_city
-    def get_delivery_state(self):
-        return self.delivery_state
-    def get_delivery_zip(self):
-        return self.delivery_zip
-    def get_delivery_deadline(self):
-        return self.delivery_deadline
-    def get_package_weight(self):
-        return self.package_weight
-    def get_special_notes(self):
-        return self.special_notes
-    def get_receiving_eta(self):
-        return self.receiving_eta
-    def get_status(self):
-        return self.status
-    def get_required_truck(self):
-        return self.required_truck
-    def get_required_packages_to_pair(self):
-        return self.required_packages_to_pair
+    def is_empty_after_removal(self):
+        return self is PackageBucket.EMPTY_AFTER_REMOVAL
 
     def __str__(self):
-        return f"Package {self.id} is {self.status} \n Delivery Deadline: {self.delivery_deadline} \n Delivery Address: {self.delivery_address} \n Delivery City: {self.delivery_city} \n Delivery Zip: {self.delivery_zip} \n Package Weight: {self.package_weight} \n Package Paired With: {str(self.required_packages_to_pair)}"
+        if self.is_empty_since_start():
+            return "Empty Since Start"
+        elif self.is_empty_after_removal():
+            return "Empty After Removal"
+        else:
+            return None
+
+def hash(package: Package):
+    return package.id
+
+# This will create a class of each package that will store the information
+# about that package.
+class Package(PackageBucket):
+
+    def __init__(self, id: int, address, city, state, zipcode, deadline, weight, notes):
+        self.id = int(id)
+        self.address = address
+        self.city = city
+        self.state = state
+        self.zipcode = zipcode
+        self.deadline = deadline
+        self.weight = weight
+        self.notes = notes
+
+        self.status = Status.LABEL_CREATED
+        self.delivered_time = None
+        self.required_truck = None
+
+    # Will turn it into a string when printed.
+    def __str__(self):
+        return f"Package ID: {self.id} || Status: {self.status} Delivered Time: {self.delivered_time if self.delivered_time is not None else "N/A"} || Deadline: {self.deadline} ||Weight: {self.weight} || Address: {self.address}, {self.city} {self.state}, {self.zipcode} || Required Truck: {self.required_truck} Notes: {self.notes}"
+
+    # Setters
+    def update_address(self, address, city, state, zipcode):
+        self.address = address
+        self.city = city
+        self.state = state
+        self.zipcode = zipcode
+
+    def update_status(self, status: Status, delivered_time: datetime = None):
+        self.status = status
+        if status == Status.DELIVERED:
+            self.delivered_time = delivered_time
+
+    def set_required_truck(self, truck):
+        self.required_truck = truck
+
+    def add_required_package(self, package_id: int):
+        self.required_package_set.add(package_id)
+
+    # Getters
+    def get_id(self):
+        return self.id
+    def get_address(self):
+        return self.address
+    def get_city(self):
+        return self.city
+    def get_state(self):
+        return self.state
+    def get_zipcode(self):
+        return self.zipcode
+    def get_deadline(self):
+        return self.deadline
+    def get_weight(self):
+        return self.weight
+    def get_notes(self):
+        return self.notes
+    def get_status(self):
+        return self.status
+    def get_delivered_time(self):
+        return self.delivered_time
+    def get_required_truck(self):
+        return self.required_truck
+
+PackageBucket.EMPTY_SINCE_START = PackageBucket()
+PackageBucket.EMPTY_AFTER_REMOVAL = PackageBucket()

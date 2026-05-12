@@ -1,14 +1,17 @@
-import receiving
-from hashtable import Hashtable
-from receiving import packages_to_pair
+from receiving import *
+from global_variables import *
+from shipping import build_shipment, build_special_case_shipment
 
-wgups_table = Hashtable()
+receive_package()
 
-receiving.receive_packages(wgups_table)
+print(wgups_table)
 
-print(wgups_table.get(32))
-print(wgups_table.get(12))
-print(wgups_table.get(10))
-print(wgups_table.get(16))
-print(wgups_table.get(20))
+print_addresses()
 
+print_loading_queue()
+
+print(required_packages_set)
+
+manifest = build_shipment(build_special_case_shipment())
+
+print_manifest(manifest)
