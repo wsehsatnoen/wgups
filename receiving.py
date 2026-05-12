@@ -16,10 +16,12 @@ def receive_package():
 def handle_package(package):
     update_deadline(package)
     handle_notes(package)
-    address_mixer(package)
-    if any(package.get_id() in x for x in [delayed_package_ids, special_case_packages]):
+    if package.get_id() in delayed_package_ids:
         return
-    loading_queue.append([package.get_id(), package.get_deadline()])
+    address_mixer(package)
+    if package.get_id() in special_case_packages:
+        return
+    loading_queue.append(package.get_id())
 
 def update_deadline(package):
     if "EOD" in package.deadline:
@@ -30,14 +32,13 @@ def update_deadline(package):
 def handle_notes(package):
     note = package.get_notes()
     if "Can only be on truck 2" in note:
-        package.set_required_truck(2)
-        special_case_packages.add(package.get_id())
+        special_case_packages.append(package.get_id())
         return
     if "Must be delivered with" in note:
         paired_package = [int(package_id) for package_id in re.findall(r'\d+', note)]
-        special_case_packages.add(package.get_id())
+        special_case_packages.append(package.get_id())
         for i in paired_package:
-            special_case_packages.add(i)
+            special_case_packages.append(i)
         return
     if "Delayed on flight" in note:
         package.update_status(Status.LABEL_CREATED)
@@ -56,5 +57,18 @@ def address_mixer(package):
     else:
         addresses[address] = [package.get_id()]
 
-def delayed_package_handler():
-    pass
+def delayed_package_handler(time):
+    if time == datetime.time(10, 20):
+        wgups_table.get_bucket(9).update_address("410 S State St", "Salt Lake City", "UT", "84111")
+        wgups_table.get_bucket(9).update_status(Status.AT_HUB)
+        loading_queue.append(9)
+        address_mixer(wgups_table.get_bucket(9))
+    if time == datetime.time(9, 5):
+        for package_id in delayed_package_ids:
+            if package_id == 9:
+                continue
+            package = wgups_table.get_bucket(package_id)
+            package.update_status(Status.AT_HUB)
+            loading_queue.append(package_id)
+            address_mixer(package)
+    sort_loading_queue()

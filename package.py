@@ -56,11 +56,10 @@ class Package(PackageBucket):
 
         self.status = Status.LABEL_CREATED
         self.delivered_time = None
-        self.required_truck = None
 
     # Will turn it into a string when printed.
     def __str__(self):
-        return f"Package ID: {self.id} || Status: {self.status} Delivered Time: {self.delivered_time if self.delivered_time is not None else "N/A"} || Deadline: {self.deadline} ||Weight: {self.weight} || Address: {self.address}, {self.city} {self.state}, {self.zipcode} || Required Truck: {self.required_truck} Notes: {self.notes}"
+        return f"Package ID: {self.id} || Status: {self.status} Delivered Time: {self.delivered_time if self.delivered_time is not None else "N/A"} || Deadline: {self.deadline} ||Weight: {self.weight} || Address: {self.address}, {self.city} {self.state}, {self.zipcode} || Notes: {self.notes}"
 
     # Setters
     def update_address(self, address, city, state, zipcode):
@@ -73,9 +72,6 @@ class Package(PackageBucket):
         self.status = status
         if status == Status.DELIVERED:
             self.delivered_time = delivered_time
-
-    def set_required_truck(self, truck):
-        self.required_truck = truck
 
     def add_required_package(self, package_id: int):
         self.required_package_set.add(package_id)
