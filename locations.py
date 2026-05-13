@@ -12,7 +12,7 @@ with open("addresses.csv", "r") as csvfile:
         counter += 1
         num_addresses += 1
 
-distance_matrix = [[0.0 for _ in range(num_addresses)] for _ in range(num_addresses)]
+distance_matrix = [[0.0 for x in range(num_addresses)] for x in range(num_addresses)]
 
 with open("distances.csv", "r") as csvfile:
     reader = csv.reader(csvfile)
