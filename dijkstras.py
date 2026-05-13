@@ -1,8 +1,6 @@
 import math
 
 from locations import distance_matrix, locations, all_pairs_shortest_path
-from global_variables import *
-
 
 def dijkstras(nodes):
 

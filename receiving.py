@@ -72,6 +72,7 @@ def delayed_package_handler(time):
         wgups_table.get_bucket(9).update_status(Status.AT_HUB)
         loading_queue.add(9)
         address_mixer(wgups_table.get_bucket(9))
+        delayed_package_ids.remove(9)
     if time == datetime.time(9, 5):
         for package_id in delayed_package_ids:
             if package_id == 9:
@@ -83,3 +84,5 @@ def delayed_package_handler(time):
             else:
                 loading_queue.add(package_id)
             address_mixer(package)
+        delayed_package_ids.clear()
+        delayed_package_ids.add(9)

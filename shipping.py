@@ -1,4 +1,4 @@
-import math
+import copy
 
 from dijkstras import dijkstras, get_route_distance
 from global_variables import *
@@ -13,21 +13,27 @@ def build_manifest(packages):
         same_address = addresses[package.get_address()]
 
         if count + len(same_address[1]) <= 16 and package.get_address() not in manifest:
-            manifest[package.get_address()] = same_address
+            manifest[package.get_address()] = copy.deepcopy(same_address)
             count += len(same_address[1])
             packages_in_manifest.update(same_address[1])
 
+    print(packages_in_manifest)
     account_for_packages(packages_in_manifest)
 
     return manifest
 
 def account_for_packages(list_of_packages):
     for id in list_of_packages:
+
         package = wgups_table.get_bucket(id)
         loading_queue.remove(package.get_id()) if package.get_id() in loading_queue else None
         priority_set.remove(package.get_id()) if package.get_id() in priority_set else None
         truck_two_packages.remove(package.get_id()) if package.get_id() in truck_two_packages else None
         paired_packages.remove(package.get_id()) if package.get_id() in paired_packages else None
+
+        for address in addresses:
+            if id in addresses[address][1]:
+                addresses[address][1].remove(id)
 
 def build_route(manifest):
     priority_list = []

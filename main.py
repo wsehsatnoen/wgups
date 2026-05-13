@@ -12,16 +12,10 @@ print(paired_packages)
 
 print_addresses()
 
-shipments.append(build_manifest(paired_packages))
-
+shipments.append(build_manifest(paired_packages.union(truck_two_packages)))
 delayed_package_handler(datetime.time(9,5))
-
 shipments.append(build_manifest(priority_set))
-
 delayed_package_handler(datetime.time(10,20))
-
-shipments.append(build_manifest(truck_two_packages))
-shipments.append(build_manifest(loading_queue))
 shipments.append(build_manifest(loading_queue))
 
 print_shipments()
