@@ -14,8 +14,11 @@ class Truck:
         self.id = id
         self.capacity = capacity
         self.truckStatus = truckStatus.IDLE
-        self.manifest = None
         self.driver = None
+        self.current_location = "HUB"
+        self.milage = 0
+        self.manifest = None
+
 
     def __str__(self):
         return f"Truck ID: {self.id} || Status: {self.truckStatus}\n Manifest: {print_manifest(self.manifest) if self.manifest is not None else "None"}"

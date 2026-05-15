@@ -11,7 +11,7 @@ class HashTable:
         string = f"Table Size: {self.size} \nTable Contents:\n==============================================="
         index = 0
         for bucket in self.table:
-            string += f"\nIndex: {index} || {bucket}"
+            string += f"\nIndex: {index:2} || {bucket}"
             index += 1
         string += "\n==============================================="
         return string

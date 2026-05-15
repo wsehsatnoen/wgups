@@ -26,3 +26,6 @@ def get_route_distance(route):
         distance += all_pairs_shortest_path[locations[route[i]]][locations[route[i + 1]]]
     return distance
 
+def get_distance(address_one, address_two):
+    return all_pairs_shortest_path[locations[address_one]][locations[address_two]]
+

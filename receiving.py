@@ -9,15 +9,17 @@ def receive_package():
         reader = csv.DictReader(csvfile)
         for row in reader:
             package = Package(row['id'], row['address'], row['city'], row['state'], row['zipcode'], row['delivery_deadline'], row['weight'], row['notes'])
-            wgups_table.insert(package)
             handle_package(package)
+            wgups_table.insert(package)
 
 def handle_package(package):
     update_deadline(package)
     handle_notes(package)
     if package.get_id() in delayed_package_ids:
+        package.update_status(Status.LABEL_CREATED)
         return
     address_mixer(package)
+    package.update_status(Status.AT_HUB)
     if package.get_id() in truck_two_packages or package.get_id() in paired_packages:
         return
     if package.get_deadline() < datetime.time(17, 00):
@@ -26,10 +28,10 @@ def handle_package(package):
     loading_queue.add(package.get_id())
 
 def update_deadline(package):
-    if "EOD" in package.deadline:
-        package.deadline = datetime.time(17, 00)
+    if "EOD" in package.get_deadline():
+        package.update_deadline(datetime.time(17, 00))
     else:
-        package.deadline = datetime.datetime.strptime(package.deadline, "%I:%M %p").time()
+        package.update_deadline(datetime.datetime.strptime(package.get_deadline(), "%I:%M %p").time())
 
 def handle_notes(package):
     note = package.get_notes()
@@ -48,11 +50,9 @@ def handle_notes(package):
                 priority_set.remove(i)
         return
     if "Delayed on flight" in note:
-        package.update_status(Status.LABEL_CREATED)
         delayed_package_ids.add(package.get_id())
         return
     if "Wrong address listed" in note:
-        package.update_status(Status.LABEL_CREATED)
         package.update_address(None, None, None, None)
         delayed_package_ids.add(package.get_id())
         return
@@ -67,13 +67,13 @@ def address_mixer(package):
         addresses[address] = [package.get_deadline(), [package.get_id()]]
 
 def delayed_package_handler(time):
-    if time == datetime.time(10, 20):
+    if time >= datetime.time(10, 20):
         wgups_table.get_bucket(9).update_address("410 S State St", "Salt Lake City", "UT", "84111")
         wgups_table.get_bucket(9).update_status(Status.AT_HUB)
         loading_queue.add(9)
         address_mixer(wgups_table.get_bucket(9))
         delayed_package_ids.remove(9)
-    if time == datetime.time(9, 5):
+    if time >= datetime.time(9, 5):
         for package_id in delayed_package_ids:
             if package_id == 9:
                 continue
