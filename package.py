@@ -57,11 +57,13 @@ class Package(PackageBucket):
         self.required_truck = None
 
         self.status = Status.LABEL_CREATED
-        self.delivered_time = "N/A"
+        self.delivered_time = "Pending "
+
+        self.activity_tracking = []
 
     # Will turn it into a string when printed.
     def __str__(self):
-        return f"Package ID: {self.id:2} || Status: {self.status:13} || Delivered Time: {self.delivered_time if self.status is Status.DELIVERED else "N/A"} || Deadline: {self.deadline} || Weight: {self.weight:2} || Address: {self.address}, {self.city} {self.state}, {self.zipcode} || Notes: {self.notes}"
+        return f"Package ID: {self.id:2} || Status: {self.status:13} || Delivered Time: {self.delivered_time} || Deadline: {self.deadline} || Weight: {self.weight:2} || Address: {self.address}, {self.city} {self.state}, {self.zipcode} || Notes: {self.notes}"
 
     # Setters
     def update_address(self, address, city, state, zipcode):
@@ -70,16 +72,35 @@ class Package(PackageBucket):
         self.state = state
         self.zipcode = zipcode
 
-    def update_status(self, status: Status, delivered_time: datetime = None):
+    def update_status(self, status: Status, time):
         self.status = status
+        self.add_activity(status, time)
         if status == Status.DELIVERED:
-            self.delivered_time = delivered_time
+            self.delivered_time = time
 
     def update_required_truck(self, required_truck):
         self.required_truck = required_truck
 
     def update_deadline(self, deadline: datetime):
         self.deadline = deadline
+
+    def add_activity(self, status, time):
+        self.activity_tracking.append([status, time])
+        print(self.activity_tracking)
+
+    def print_package(self, time: datetime = None):
+        if time is None:
+            return self.__str__()
+        else:
+            current_status = self.status
+            delivered_time_at = "Pending "
+            for activity_status, activity_time in self.activity_tracking:
+                if activity_time <= time:
+                    current_status = activity_status
+                    if activity_status == Status.DELIVERED:
+                        delivered_time_at = activity_time
+        return f"Package ID: {self.id:2} || Status: {current_status:13} || Delivered Time: {delivered_time_at} || Deadline: {self.deadline} || Weight: {self.weight:2} || Address: {self.address}, {self.city} {self.state}, {self.zipcode} || Notes: {self.notes}"
+
 
     # Getters
     def get_id(self):

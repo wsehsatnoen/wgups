@@ -1,5 +1,4 @@
 import csv
-import datetime
 import re
 from package import Package, Status
 from global_variables import *
@@ -16,10 +15,10 @@ def handle_package(package):
     update_deadline(package)
     handle_notes(package)
     if package.get_id() in delayed_package_ids:
-        package.update_status(Status.LABEL_CREATED)
+        package.update_status(Status.LABEL_CREATED, datetime.time(7, 30))
         return
     address_mixer(package)
-    package.update_status(Status.AT_HUB)
+    package.update_status(Status.AT_HUB, datetime.time(7, 30))
     if package.get_id() in truck_two_packages or package.get_id() in paired_packages:
         return
     if package.get_deadline() < datetime.time(17, 00):
@@ -69,7 +68,7 @@ def address_mixer(package):
 def delayed_package_handler(time):
     if time >= datetime.time(10, 20):
         wgups_table.get_bucket(9).update_address("410 S State St", "Salt Lake City", "UT", "84111")
-        wgups_table.get_bucket(9).update_status(Status.AT_HUB)
+        wgups_table.get_bucket(9).update_status(Status.AT_HUB, time)
         loading_queue.add(9)
         address_mixer(wgups_table.get_bucket(9))
         delayed_package_ids.remove(9)
@@ -78,7 +77,7 @@ def delayed_package_handler(time):
             if package_id == 9:
                 continue
             package = wgups_table.get_bucket(package_id)
-            package.update_status(Status.AT_HUB)
+            package.update_status(Status.AT_HUB, time)
             if package.get_deadline() < datetime.time(17, 00):
                 priority_set.add(package_id)
             else:

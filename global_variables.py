@@ -1,5 +1,4 @@
 import datetime
-
 from hashtable import HashTable
 
 wgups_table = HashTable()
@@ -12,6 +11,8 @@ priority_set = set()
 
 shipments = []
 miles_driven = 0
+
+global_time = datetime.time(8, 0)
 
 current_time = datetime.time(8, 0)
 

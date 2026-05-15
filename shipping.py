@@ -2,8 +2,10 @@ import copy
 
 from dijkstras import dijkstras, get_route_distance, get_distance
 from global_variables import *
+import datetime
+
 from package import Status
-from datetime import *
+
 
 def build_manifest(packages):
     manifest = {}
@@ -19,10 +21,9 @@ def build_manifest(packages):
             count += len(same_address[1])
             packages_in_manifest.update(same_address[1])
 
-    print(packages_in_manifest)
     account_for_packages(packages_in_manifest)
 
-    return manifest
+    return manifest, packages_in_manifest
 
 def account_for_packages(list_of_packages):
     for id in list_of_packages:
@@ -58,3 +59,28 @@ def build_route(manifest):
     distance = get_route_distance(route)
 
     return route, distance
+
+def ship(manifest, package_ids, time = None):
+    route, distance = build_route(manifest)
+    for package in package_ids:
+        wgups_table.get_bucket(package).update_status(Status.EN_ROUTE, time)
+
+    current_time = time
+    delivery_time_list = []
+
+    i = 0
+    for address in route:
+        if i > 0:
+            segment_distance = get_distance(route[i - 1], address)
+            segment_time = (segment_distance / 18) * 60  # Convert hours to minutes
+            current_time = (datetime.datetime.combine(datetime.date.today(), current_time) +
+                           datetime.timedelta(minutes=segment_time)).time()
+            delivery_time_list.append([address, current_time])
+
+            # Update packages at this address to delivered status
+            if address in manifest:
+                for package_id in manifest[address][1]:
+                    wgups_table.get_bucket(package_id).update_status(Status.DELIVERED, current_time)
+
+        i += 1
+    print(current_time, distance, delivery_time_list)

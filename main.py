@@ -1,28 +1,22 @@
 from receiving import *
-from global_variables import *
 from shipping import *
-from truck import Truck, Driver
 
 receive_package()
 
-truck_one = Truck(1)
-truck_two = Truck(2)
-truck_three = Truck(3)
+manifest_one, packages_one = build_manifest(paired_packages.union(truck_two_packages))
+ship(manifest_one, packages_one, datetime.time(8, 0))
 
-driver_one = Driver(1)
-driver_two = Driver(2)
+delayed_package_handler(datetime.time(9, 5))
+manifest_two, packages_two = build_manifest(priority_set)
+ship(manifest_two, packages_two, datetime.time(9, 5))
 
-delayed_package_handler(datetime.time(9, 4))
 
-manifest_one = build_manifest(paired_packages.union(truck_two_packages))
-route_one, route_one_distance = build_route(manifest_one)
-print_manifest(manifest_one)
-print_route(route_one, route_one_distance)
+delayed_package_handler(datetime.time(10, 20))
+manifest_three, packages_three = build_manifest(loading_queue)
+ship(manifest_three, packages_three, datetime.time(10, 25))
 
-print(get_distance(route_one[0], route_one[1]))
 
-print(wgups_table)
 
-print(len(wgups_table.get_bucket(12).get_address()))
+wgups_table.print_table(datetime.time(9, 45))
 
 # for milage, just take the time requested and the difference from the time the truck left to get the current

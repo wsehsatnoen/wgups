@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from package import Package, PackageBucket, Status, hash
 
 class HashTable:
@@ -7,14 +9,14 @@ class HashTable:
         self.size = initial_size
 
 
-    def __str__(self):
+    def print_table(self, time: datetime = None):
         string = f"Table Size: {self.size} \nTable Contents:\n==============================================="
         index = 0
         for bucket in self.table:
-            string += f"\nIndex: {index:2} || {bucket}"
+            string += f"\nIndex: {index:2} || {bucket.print_package(time)}"
             index += 1
         string += "\n==============================================="
-        return string
+        print(string)
 
     def get_bucket(self, key):
         for i in range(self.size):
