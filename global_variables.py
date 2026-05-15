@@ -9,22 +9,11 @@ delayed_package_ids = set()
 loading_queue = set()
 priority_set = set()
 
-shipments = []
 miles_driven = 0
-
-global_time = datetime.time(8, 0)
-
-current_time = datetime.time(8, 0)
 
 def print_addresses():
     for address in addresses:
         print(f"{address} || Soonest Deadline: {addresses[address][0]} || Package IDs: {addresses[address][1]}")
-
-def print_shipments():
-    for manifest in shipments:
-        print("----------------")
-        print_manifest(manifest)
-        print("----------------")
 
 def print_manifest(manifest):
     for address, info in manifest.items():

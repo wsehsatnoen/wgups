@@ -17,6 +17,6 @@ ship(manifest_three, packages_three, datetime.time(10, 25))
 
 
 
-wgups_table.print_table(datetime.time(9, 45))
+wgups_table.print_table(datetime.time(9, 59))
 
 # for milage, just take the time requested and the difference from the time the truck left to get the current
