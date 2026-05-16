@@ -260,10 +260,11 @@ queue set that will deliver the final packages after truck two and driver 1 arri
 *THE USER INTERFACE AND SCREENSHOTS
 
 This one was a little challenging because there are a lot of edge cases that the user could do that could cause errors.
-To prevent those, we kept it simple and robust. There are only three options to choose from, show dashboard to see all the
-packages and the trucks, change time to add time to the simulation, and exit. The simulation will start at 7:30 am and
-show all the packages that have been received and sorted and those that are not in facility via Label Created. The routes
-have already been pre-planned and the purpose of the simulation is to simply see the statuses at given times of the day.
+To prevent those, we kept it simple and robust. There are only four options to choose from, show dashboard to see all the
+packages and the trucks, change time to add time to the simulation, view a package and its status at a requested time, and exit. 
+The simulation will start at 7:30 am and show all the packages that have been received and sorted and those that are not 
+in facility via Label Created. The routes have already been pre-planned and the purpose of the simulation is to simply 
+see the statuses at given times of the day.
 
 Given a time constraint, there is much more that can be added (such as allowing the user to traverse backwards in addition
 to forwards in time) to improve it. For the purposes of this assignment, however, what is created will satisfy.
@@ -325,3 +326,5 @@ of the linked list, with a time complexity of O(N).
 
 <a id="1">[1]: </a>
 Krymgand, A. (n.d.). The Christofides algorithm. The Christofides Algorithm. https://alon.kr/posts/christofides
+
+Lysecky, R., & Vahid, F. (2018, June). C950: Data Structures and Algorithms II. zyBooks. Retrieved May 10, 2026, from https://learn.zybooks.com/zybook/WGUC950AY20182019/

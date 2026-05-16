@@ -25,7 +25,7 @@ print("Welcome!!")
 print(f"Current Time: {current_time}")
 print("Booting up, please wait...")
 while True:
-    print("\033[2JHello there! What would you like to do?\n1. View Dashboard \n2. Change Time\n3. Exit", end="")
+    print("\033[2JHello there! What would you like to do?\n1. View Dashboard \n2. Change Time\n3. Get Package Status \n4. Exit", end="")
     input_choice = input("\nEnter your choice: ")
     if input_choice == "1":
         print(f"Current Time: {current_time}")
@@ -52,7 +52,23 @@ while True:
             case _:
                 print("Invalid choice. Please try again.")
         print(f"Current Time: {current_time}")
-    elif input_choice == "3":
+    elif input_choice == '3':
+        try:
+            package_id = int(input("Enter Package ID: "))
+        except ValueError:
+            print("Invalid choice. Please try again.")
+            continue
+        try:
+            req_time = input("Enter requested time: ")
+            requested_time = datetime.time.strptime(req_time, "%H:%M")
+        except ValueError:
+            print("Invalid choice. Please try again.")
+            continue
+        package = wgups_table.get_bucket(package_id)
+        print(f"Getting Package ID: {package.id} at time: {req_time}")
+        print(package.print_package(requested_time))
+        print("--------------------------")
+    elif input_choice == "4":
         print("The day has ended, here are the results:")
         print(f"Total Miles Driven: {total_miles}")
         print("Packages Delivered = 40")
