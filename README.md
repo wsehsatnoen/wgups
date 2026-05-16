@@ -269,7 +269,8 @@ Given a time constraint, there is much more that can be added (such as allowing 
 to forwards in time) to improve it. For the purposes of this assignment, however, what is created will satisfy.
 
 The screenshots are located in the Screenshots folder. Screenshot_one is the dashboard that shows the status of all the packages
-at 8:45, screenshot_two is the same at 9:45, and screenshot_three is the same at 12:45. Screenshot_four is a screenshot of code
+at 8:45, screenshot_two is the same at 9:45, and screenshot_three is the same at 12:45. Final_dashboard is a screenshot of 
+the final dashboard with all packages delivered and their delivery time. Code_completion is a screenshot of code
 completion with the total miles driven with exit code 0.
 
 ### SECTION F
