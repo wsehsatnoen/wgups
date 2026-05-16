@@ -1,7 +1,12 @@
 import datetime
 from hashtable import HashTable
+from truck import Truck
 
 wgups_table = HashTable()
+truck_one = Truck(1)
+truck_two = Truck(2)
+truck_three = Truck(3)
+
 addresses = {}
 paired_packages = set()
 truck_two_packages = set()

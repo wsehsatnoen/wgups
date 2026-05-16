@@ -86,7 +86,6 @@ class Package(PackageBucket):
 
     def add_activity(self, status, time):
         self.activity_tracking.append([status, time])
-        print(self.activity_tracking)
 
     def print_package(self, time: datetime = None):
         if time is None:
@@ -100,7 +99,6 @@ class Package(PackageBucket):
                     if activity_status == Status.DELIVERED:
                         delivered_time_at = activity_time
         return f"Package ID: {self.id:2} || Status: {current_status:13} || Delivered Time: {delivered_time_at} || Deadline: {self.deadline} || Weight: {self.weight:2} || Address: {self.address}, {self.city} {self.state}, {self.zipcode} || Notes: {self.notes}"
-
 
     # Getters
     def get_id(self):

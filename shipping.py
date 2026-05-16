@@ -60,7 +60,7 @@ def build_route(manifest):
 
     return route, distance
 
-def ship(manifest, package_ids, time = None):
+def ship(manifest, package_ids, truck, driver, time = None):
     route, distance = build_route(manifest)
     for package in package_ids:
         wgups_table.get_bucket(package).update_status(Status.EN_ROUTE, time)
@@ -83,4 +83,4 @@ def ship(manifest, package_ids, time = None):
                     wgups_table.get_bucket(package_id).update_status(Status.DELIVERED, current_time)
 
         i += 1
-    print(current_time, distance, delivery_time_list)
+    truck.load(manifest, package_ids, delivery_time_list, distance, driver, time)
