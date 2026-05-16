@@ -287,7 +287,7 @@ After running the application, all packages are delivered to their designation a
 There are other algorithms that could have been used for this application that would also meet the requirements:
 
 One which is more complicated is Christofides' algorithm. Christofides' takes a cycle of points and creates a path through 
-each of them that is 1.5 times the optimal solution. The complication, however, is it requires that the graph meet triangular 
+each of them that is 1.5 times the optimal solution. [[1]](#1) The complication, however, is it requires that the graph meet triangular 
 inequality, which in our case, it does not. However, that can be fixed simply using Floyd-Warshall to find the shortest 
 path between all points to instantiate triangular inequality. This one is different from nearest neighbor because it will
 prevent a long return leg.
@@ -309,3 +309,19 @@ in the same area.
 ### SECTION H
 *DATA STRUCTURE JUSTIFICATION*
 
+The use of the Hash Table is potentially the best option for storing the packages and their data. However, two other options
+are the use of a Linked List and a Min-Heap:
+
+The linked list will store the information just as the Hash Table did, and insertion will be optimal due to simply pending 
+at the end of the list. However, retrieval is not given that the Hash Table has a retrieval time complexity of O(1), 
+but the linked list has a time complexity of O(N) for it has to iterate through all the buckets until a match. 
+
+The other option is the Min-Heap. This will be optimal for it can store packages with a priority near the front of the list, 
+always returning the earliest priority from the root. However, again, retrieval will have the same complications as that 
+of the linked list, with a time complexity of O(N). 
+
+### SECTION I & J
+*SOURCES AND PROFESSIONALISM*
+
+<a id="1">[1]: </a>
+Krymgand, A. (n.d.). The Christofides algorithm. The Christofides Algorithm. https://alon.kr/posts/christofides
