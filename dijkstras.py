@@ -2,6 +2,9 @@ import math
 
 from locations import distance_matrix, locations, all_pairs_shortest_path
 
+# Dijkstra's Algorithm used to find the shortest path between two points.
+# Time Complexity: O(N^2)
+# Space Complexity: O(N)
 def dijkstras(nodes):
 
     current_node = 0
@@ -20,12 +23,18 @@ def dijkstras(nodes):
         current_node = locations[min_node]
     return path
 
+# Returns the distance of a route that has been built to ensure that the routes do not exceed the max distance.
+# Time Complexity: O(N)
+# Space Complexity: O(1)
 def get_route_distance(route):
     distance = 0
     for i in range(len(route) - 1):
         distance += all_pairs_shortest_path[locations[route[i]]][locations[route[i + 1]]]
     return distance
 
+# Returns the distance between two addresses.
+# Time Complexity: O(1)
+# Space Complexity: O(1)
 def get_distance(address_one, address_two):
     return all_pairs_shortest_path[locations[address_one]][locations[address_two]]
 

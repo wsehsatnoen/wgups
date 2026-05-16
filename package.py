@@ -42,6 +42,7 @@ def hash(package: Package):
 
 # This will create a class of each package that will store the information
 # about that package.
+# Everything in this class has a Time and Space Complexity of O(1) unless noted otherwise.
 class Package(PackageBucket):
 
     def __init__(self, id: int, address, city, state, zipcode, deadline, weight, notes):
@@ -87,6 +88,8 @@ class Package(PackageBucket):
     def add_activity(self, status, time):
         self.activity_tracking.append([status, time])
 
+    # Time Complexity: O(N)
+    # Space Complexity: O(1)
     def print_package(self, time: datetime = None):
         if time is None:
             return self.__str__()

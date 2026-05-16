@@ -2,10 +2,16 @@ import datetime
 from hashtable import HashTable
 from truck import Truck
 
+# The challenge that I wanted to give myself was to deviate away from OOP (Object-Oriented Programming) and practice FP (Functionality Programming)
+# Thus, the use of classes are kept to a minimal: Packages (and empty package buckets), the Hash Table, and Trucks are the
+# only objects in this application. Hence, this file is used to set the global variables for the application.
+
 wgups_table = HashTable()
 truck_one = Truck(1)
 truck_two = Truck(2)
 truck_three = Truck(3)
+
+total_miles = 0
 
 addresses = {}
 paired_packages = set()
@@ -16,6 +22,7 @@ priority_set = set()
 
 miles_driven = 0
 
+# Simple print statements
 def print_addresses():
     for address in addresses:
         print(f"{address} || Soonest Deadline: {addresses[address][0]} || Package IDs: {addresses[address][1]}")

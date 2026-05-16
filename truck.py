@@ -1,6 +1,7 @@
 from datetime import datetime, date
 from enum import Enum
 
+# These classes are used to represent the trucks and their status.
 
 class Status(Enum):
     AT_HUB = "At Hub"
@@ -10,7 +11,7 @@ class Status(Enum):
     def __str__(self):
         return self.value
 
-
+# This class represents a truck and stores the relative information on it.
 class Truck:
     def __init__(self, id, capacity=16):
         self.id = id
@@ -23,6 +24,8 @@ class Truck:
         self.packages = []
         self.delivery_time_list = []
 
+    # This function will be called when a truck is assigned to a manifest. It will load the truck with the packages
+    # and the delivery time list.
     def load(self, manifest, packages, delivery_time_list, distance, driver_id, departure_time: datetime):
         self.status = Status.EN_ROUTE
         self.delivery_time_list = delivery_time_list
@@ -32,6 +35,8 @@ class Truck:
         self.miles_driven += distance
         self.driver_id = driver_id
 
+    # This function is used mainly for front end visibility. It will return a string of the packages assigned to the
+    # truck.
     def get_packages(self):
         if not self.packages:
             return "No Packages"
@@ -39,6 +44,8 @@ class Truck:
 
     # This function is used mainly for front end visibility. It will take the current time from the simulation and
     # update the status of the truck to match that of the time.
+    # Time Complexity: O(N^2)
+    # Space Complexity: O(1)
     def update_status(self, time: datetime = None):
         # Convert time to datetime if needed for arithmetic
         time_dt = datetime.combine(date.today(), time)
