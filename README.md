@@ -256,8 +256,8 @@ The first manifest is build via the paired packages and truck two packages. The 
 not depart until 9:05 to get the delayed packages on board. Then finally, the last shipment is build with the remaining loading
 queue set that will deliver the final packages after truck two and driver 1 arrive back at the hub at 10:25.
 
-### SECTION D
-*THE USER INTERFACE*
+### SECTION D & E
+*THE USER INTERFACE AND SCREENSHOTS
 
 This one was a little challenging because there are a lot of edge cases that the user could do that could cause errors.
 To prevent those, we kept it simple and robust. There are only three options to choose from, show dashboard to see all the
@@ -266,12 +266,11 @@ show all the packages that have been received and sorted and those that are not 
 have already been pre-planned and the purpose of the simulation is to simply see the statuses at given times of the day.
 
 Given a time constraint, there is much more that can be added (such as allowing the user to traverse backwards in addition
-to forwards in time) to improve it. For the purposes of this assignment, however, what is created will satisfy. 
+to forwards in time) to improve it. For the purposes of this assignment, however, what is created will satisfy.
 
-### SECTION E
-*SCREENSHOTS*
-
-No need for information here, just providing screenshots to the evaluator.
+The screenshots are located in the Screenshots folder. Screenshot_one is the dashboard that shows the status of all the packages
+at 8:45, screenshot_two is the same at 9:45, and screenshot_three is the same at 12:45. Screenshot_four is a screenshot of code
+completion with the total miles driven with exit code 0.
 
 ### SECTION F
 *ALGORITHM JUSTIFICATION*

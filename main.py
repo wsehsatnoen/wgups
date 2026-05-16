@@ -34,7 +34,6 @@ while True:
         print(truck_one.update_status(current_time))
         print(truck_two.update_status(current_time))
         print(truck_three.update_status(current_time))
-        input("Press Enter to continue...")
     elif input_choice == '2':
         print("How much time would you like to advance the clock by?:\n1. 15 minutes\n2. 30 minutes\n3. 45 minutes\n4. 60 minutes\n ")
         match int(input("Enter your choice: ")):
@@ -54,6 +53,9 @@ while True:
                 print("Invalid choice. Please try again.")
         print(f"Current Time: {current_time}")
     elif input_choice == "3":
+        print("The day has ended, here are the results:")
+        print(f"Total Miles Driven: {total_miles}")
+        print("Packages Delivered = 40")
         print("Goodbye!")
         exit()
     else:

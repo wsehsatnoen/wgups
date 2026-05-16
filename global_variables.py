@@ -20,8 +20,6 @@ delayed_package_ids = set()
 loading_queue = set()
 priority_set = set()
 
-miles_driven = 0
-
 # Simple print statements
 def print_addresses():
     for address in addresses:
