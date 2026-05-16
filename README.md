@@ -11,6 +11,7 @@ the number of classes that I used down to only 3 (okay, more if you consider the
 
 For the purpose of this assignment, that is besides the point, so here is a quick documentation of where everything
 is and how the program flows:
+
 ---
 ### SECTION A
 *THE HASH TABLE*
