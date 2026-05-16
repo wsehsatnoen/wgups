@@ -23,18 +23,17 @@ print("Welcome!!")
 print(f"Current Time: {current_time}")
 print("Booting up, please wait...")
 while True:
-    print("\033[2JHello there! What would you like to do?\n1. View Packages\n2. View Truck Status\n3. Change Time\n4. Exit", end="")
+    print("\033[2JHello there! What would you like to do?\n1. View Dashboard \n2. Change Time\n3. Exit", end="")
     input_choice = input("\nEnter your choice: ")
     if input_choice == "1":
-        wgups_table.print_table(current_time)
-        input("Press Enter to continue...")
-    elif input_choice == "2":
+        print(f"Current Time: {current_time}")
         print("Total Miles that will be traveled: ", total_miles, " miles")
+        wgups_table.print_table(current_time)
         print(truck_one.update_status(current_time))
         print(truck_two.update_status(current_time))
         print(truck_three.update_status(current_time))
         input("Press Enter to continue...")
-    elif input_choice == '3':
+    elif input_choice == '2':
         print("How much time would you like to advance the clock by?:\n1. 15 minutes\n2. 30 minutes\n3. 45 minutes\n4. 60 minutes\n ")
         match int(input("Enter your choice: ")):
             case 1:
@@ -52,7 +51,7 @@ while True:
             case _:
                 print("Invalid choice. Please try again.")
         print(f"Current Time: {current_time}")
-    elif input_choice == "4":
+    elif input_choice == "3":
         print("Goodbye!")
         exit()
     else:
