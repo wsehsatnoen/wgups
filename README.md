@@ -224,8 +224,8 @@ will be delivered to first, then those who do not have a delivery deadline will 
             else:
                 non_priority_list.append(address)
     
-        route.extend(dijkstras(priority_list))
-        route.extend(dijkstras(non_priority_list))
+        route.extend(nearest_neighbor(priority_list))
+        route.extend(nearest_neighbor(non_priority_list))
     
         route.insert(0, "HUB")
         route.append("HUB")
