@@ -2,10 +2,10 @@ import math
 
 from locations import distance_matrix, locations, all_pairs_shortest_path
 
-# Dijkstra's Algorithm used to find the shortest path between two points.
+# Dijkstra's Algorithm used to find the shortest path.
 # Time Complexity: O(N^2)
 # Space Complexity: O(N)
-def dijkstras(nodes):
+def nearest_neighbor(nodes):
 
     current_node = 0
     path = []

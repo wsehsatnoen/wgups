@@ -1,6 +1,6 @@
 import copy
 
-from dijkstras import dijkstras, get_route_distance, get_distance
+from nearest_neighbor import nearest_neighbor, get_route_distance, get_distance
 from global_variables import *
 import datetime
 
@@ -52,7 +52,7 @@ def account_for_packages(list_of_packages):
             if id in addresses[address][1]:
                 addresses[address][1].remove(id)
 
-# This function will take the manifest that was created and build the route for that shipment. It will take all of the addresses
+# This function will take the manifest that was created and build the route for that shipment. It will take all the addresses
 # on that manifest, sort them into two groups (priority, and non-priority) and first built a route with the priority list, then
 # append the route of the non-priority list.
 # Time Complexity: O(N^2) (Dijkstra's algorithm is the time determining algorithm, thus the N^2)
@@ -69,8 +69,8 @@ def build_route(manifest):
         else:
             non_priority_list.append(address)
 
-    route.extend(dijkstras(priority_list))
-    route.extend(dijkstras(non_priority_list))
+    route.extend(nearest_neighbor(priority_list))
+    route.extend(nearest_neighbor(non_priority_list))
 
     route.insert(0, "HUB")
     route.append("HUB")
