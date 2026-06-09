@@ -111,7 +111,7 @@ class Package(PackageBucket):
                     if activity_status == Status.DELIVERED:
                         delivered_time_at = str(activity_time) + " via truck " + str(self.assigned_truck)
             if self.id == 9 and time < time_class(10, 20):
-                return f"Package ID: {self.id:2} || Status: {current_status:13} || Delivered Time: {delivered_time_at} || Deadline: {self.deadline} || Weight: {self.weight:2} || Address: 300 State St, Salt Lake City Utah, 84130 || Notes: {self.notes}"
+                return f"Package ID: {self.id:2} || Status: {current_status:13} || Delivered Time: {delivered_time_at} || Deadline: {self.deadline} || Weight: {self.weight:2} || Address: 300 State St, Salt Lake City UT, 84103 || Notes: {self.notes}"
         return f"Package ID: {self.id:2} || Status: {current_status:13} || Delivered Time: {delivered_time_at} || Deadline: {self.deadline} || Weight: {self.weight:2} || Address: {self.address}, {self.city} {self.state}, {self.zipcode} || Notes: {self.notes}"
 
     # Getters
