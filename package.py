@@ -1,5 +1,5 @@
 from enum import Enum
-from datetime import datetime
+from datetime import datetime, time as time_class
 
 # For type safety, the use of this Enum class prevents problems.
 class Status(Enum):
@@ -57,6 +57,8 @@ class Package(PackageBucket):
 
         self.required_truck = None
 
+        self.assigned_truck = None
+
         self.status = Status.LABEL_CREATED
         self.delivered_time = "Pending "
 
@@ -82,6 +84,9 @@ class Package(PackageBucket):
     def update_required_truck(self, required_truck):
         self.required_truck = required_truck
 
+    def update_assigned_truck(self, assigned_truck):
+        self.assigned_truck = assigned_truck
+
     def update_deadline(self, deadline: datetime):
         self.deadline = deadline
 
@@ -99,8 +104,14 @@ class Package(PackageBucket):
             for activity_status, activity_time in self.activity_tracking:
                 if activity_time <= time:
                     current_status = activity_status
+                    if activity_status == Status.EN_ROUTE:
+                        truck_assignment = self.assigned_truck
+                        if truck_assignment is not None:
+                            current_status = f"{current_status} || Truck: {truck_assignment}"
                     if activity_status == Status.DELIVERED:
-                        delivered_time_at = activity_time
+                        delivered_time_at = str(activity_time) + " via truck " + str(self.assigned_truck)
+            if self.id == 9 and time < time_class(10, 20):
+                return f"Package ID: {self.id:2} || Status: {current_status:13} || Delivered Time: {delivered_time_at} || Deadline: {self.deadline} || Weight: {self.weight:2} || Address: 300 State St, Salt Lake City Utah, 84130 || Notes: {self.notes}"
         return f"Package ID: {self.id:2} || Status: {current_status:13} || Delivered Time: {delivered_time_at} || Deadline: {self.deadline} || Weight: {self.weight:2} || Address: {self.address}, {self.city} {self.state}, {self.zipcode} || Notes: {self.notes}"
 
     # Getters

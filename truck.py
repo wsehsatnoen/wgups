@@ -42,6 +42,9 @@ class Truck:
             return "No Packages"
         return " ".join(str(package) for package in self.packages) + " "
 
+    def get_id(self):
+        return self.id
+
     # This function is used mainly for front end visibility. It will take the current time from the simulation and
     # update the status of the truck to match that of the time.
     # Time Complexity: O(N^2)
