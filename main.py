@@ -17,7 +17,7 @@ total_miles += ship(manifest_one, packages_one, truck_one, 1, datetime.time(9, 5
 
 delayed_package_handler(datetime.time(10, 20))
 manifest_three, packages_three = build_manifest(priority_set.union(loading_queue))
-total_miles += ship(manifest_three, packages_three, truck_three, 1, datetime.time(10, 25))
+total_miles += ship(manifest_three, packages_three, truck_three, 1, datetime.time(10, 40))
 
 current_time = datetime.time(7, 30)
 
@@ -78,4 +78,4 @@ while True:
     else:
         print("Invalid choice. Please try again.")
 
-# for milage, just take the time requested and the difference from the time the truck left to get the current
+# for 2milage, just take the time requested and the difference from the time the truck left to get the current
