@@ -5,12 +5,13 @@ from locations import distance_matrix, locations, all_pairs_shortest_path
 # Dijkstra's Algorithm used to find the shortest path.
 # Time Complexity: O(N^2)
 # Space Complexity: O(N)
-def nearest_neighbor(nodes):
+def nearest_neighbor(nodes, start_location):
 
     current_node = 0
     path = []
 
     unvisited_nodes = nodes
+    unvisited_nodes.insert(0, start_location)
     while unvisited_nodes:
         min_node = unvisited_nodes[0]
         min_dis = math.inf

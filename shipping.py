@@ -6,7 +6,7 @@ import datetime
 
 from package import Status
 
-# Once all of the packages have been received, this is where they will be sorted onto the trucks and the routes are
+# Once all the packages have been received, this is where they will be sorted onto the trucks and the routes are
 # officially built.
 
 # Here is the function that will pull from a specified set and build a manifest with those packages.
@@ -61,7 +61,15 @@ def build_route(manifest):
     priority_list = []
     non_priority_list = []
 
+    address_list = []
+
     route = []
+
+    # for address, info in manifest.items():
+    #     address_list.append(address)
+    #
+    # route.extend(nearest_neighbor(address_list, "HUB"))
+
 
     for address, info in manifest.items():
         if info[0] < datetime.time(17, 0):
@@ -69,10 +77,9 @@ def build_route(manifest):
         else:
             non_priority_list.append(address)
 
-    route.extend(nearest_neighbor(priority_list))
-    route.extend(nearest_neighbor(non_priority_list))
+    route.extend(nearest_neighbor(priority_list, "HUB"))
+    route.extend(nearest_neighbor(non_priority_list, route.pop()))
 
-    route.insert(0, "HUB")
     route.append("HUB")
 
     distance = get_route_distance(route)

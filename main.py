@@ -6,16 +6,17 @@ from shipping import *
 
 receive_package()
 
-# Here is where all of the functions that were created come together to build the routes.
-manifest_one, packages_one = build_manifest(paired_packages.union(truck_two_packages))
-total_miles += ship(manifest_one, packages_one, truck_two, 1, datetime.time(8, 0))
+# Here is where all the functions that were created come together to build the routes.
+
+manifest_two, packages_two = build_manifest(priority_set.union(truck_two_packages))
+total_miles += ship(manifest_two, packages_two, truck_two, 2, datetime.time(8, 0))
 
 delayed_package_handler(datetime.time(9, 5))
-manifest_two, packages_two = build_manifest(priority_set)
-total_miles += ship(manifest_two, packages_two, truck_one, 2, datetime.time(9, 5))
+manifest_one, packages_one = build_manifest(paired_packages.union(priority_set))
+total_miles += ship(manifest_one, packages_one, truck_one, 1, datetime.time(9, 5))
 
 delayed_package_handler(datetime.time(10, 20))
-manifest_three, packages_three = build_manifest(loading_queue)
+manifest_three, packages_three = build_manifest(priority_set.union(loading_queue))
 total_miles += ship(manifest_three, packages_three, truck_three, 1, datetime.time(10, 25))
 
 current_time = datetime.time(7, 30)
