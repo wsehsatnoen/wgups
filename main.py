@@ -37,7 +37,12 @@ while True:
         print(truck_three.update_status(current_time))
     elif input_choice == '2':
         print("How much time would you like to advance the clock by?:\n1. 15 minutes\n2. 30 minutes\n3. 45 minutes\n4. 60 minutes\n ")
-        match int(input("Enter your choice: ")):
+        try:
+            time_choice = int(input("Enter your choice: "))
+        except ValueError:
+            print("Invalid choice. Please try again.")
+            continue
+        match time_choice:
             case 1:
                 current_time = (datetime.datetime.combine(datetime.date.today(), current_time) + datetime.timedelta(
                     minutes=15)).time()
@@ -66,6 +71,9 @@ while True:
             print("Invalid choice. Please try again.")
             continue
         package = wgups_table.get_bucket(package_id)
+        if package is None:
+            print(f"Package ID {package_id} not found.")
+            continue
         print(f"Getting Package ID: {package.id} at time: {req_time}")
         print(package.print_package(requested_time))
         print("--------------------------")
@@ -77,5 +85,3 @@ while True:
         exit()
     else:
         print("Invalid choice. Please try again.")
-
-# for 2milage, just take the time requested and the difference from the time the truck left to get the current

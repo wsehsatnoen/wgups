@@ -2,7 +2,7 @@ from datetime import datetime
 
 from package import Package, PackageBucket, hash
 
-# Here is the Hash Table that will store all of the packages:
+# Here is the Hash Table that will store all the packages:
 class HashTable:
 
     # Time Complexity: O(1)

@@ -37,8 +37,7 @@ class PackageBucket:
         else:
             return None
 
-def hash(package: Package):
-    return package.id
+
 
 # This will create a class of each package that will store the information
 # about that package.
@@ -137,6 +136,9 @@ class Package(PackageBucket):
         return self.delivered_time
     def get_required_truck(self):
         return self.required_truck
+
+def hash(package: Package):
+    return package.id
 
 PackageBucket.EMPTY_SINCE_START = PackageBucket()
 PackageBucket.EMPTY_AFTER_REMOVAL = PackageBucket()
