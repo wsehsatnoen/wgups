@@ -1,4 +1,4 @@
-# Student ID: #########
+# Student ID: 012336566
 # Student Name: Shane Darilek
 
 from receiving import *
@@ -7,17 +7,20 @@ from shipping import *
 receive_package()
 
 # Here is where all the functions that were created come together to build the routes.
+manifest_one_temp, packages_one_temp = build_manifest(truck_two_packages)
 
-manifest_two, packages_two = build_manifest(priority_set.union(truck_two_packages))
-total_miles += ship(manifest_two, packages_two, truck_two, 2, datetime.time(8, 0))
+manifest_two, packages_two = build_manifest(paired_packages.union(priority_set))
+total_miles += ship(manifest_two, packages_two, truck_one, 1, True, datetime.time(8, 0))
 
 delayed_package_handler(datetime.time(9, 5))
-manifest_one, packages_one = build_manifest(paired_packages.union(priority_set))
-total_miles += ship(manifest_one, packages_one, truck_one, 1, datetime.time(9, 5))
+
+manifest_one, packages_one = build_manifest(priority_set, manifest_one_temp, packages_one_temp)
+total_miles += ship(manifest_one, packages_one, truck_two, 2, False, datetime.time(9, 5))
+
 
 delayed_package_handler(datetime.time(10, 20))
 manifest_three, packages_three = build_manifest(priority_set.union(loading_queue))
-total_miles += ship(manifest_three, packages_three, truck_three, 1, datetime.time(10, 40))
+total_miles += ship(manifest_three, packages_three, truck_three, 1, False, datetime.time(10, 30))
 
 current_time = datetime.time(7, 30)
 

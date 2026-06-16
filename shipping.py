@@ -10,7 +10,7 @@ from package import Status
 # officially built.
 
 # Here is the function that will pull from a specified set and build a manifest with those packages.
-def build_manifest(packages):
+def build_manifest(packages, preloaded_addresses = None, preloaded_packages = None):
     manifest = {}
     count = 0
     packages_in_manifest = set()
@@ -32,6 +32,10 @@ def build_manifest(packages):
             packages_in_manifest.update(same_address[1])
 
     account_for_packages(packages_in_manifest)
+
+    if preloaded_packages:
+        packages_in_manifest.update(preloaded_packages)
+        manifest.update(preloaded_addresses)
 
     return manifest, packages_in_manifest
 
@@ -57,7 +61,7 @@ def account_for_packages(list_of_packages):
 # append the route of the non-priority list.
 # Time Complexity: O(N^2) (Dijkstra's algorithm is the time determining algorithm, thus the N^2)
 # Space Complexity: O(N)
-def build_route(manifest):
+def build_route(manifest, ret = False):
     priority_list = []
     non_priority_list = []
 
@@ -80,7 +84,8 @@ def build_route(manifest):
     route.extend(nearest_neighbor(priority_list, "HUB"))
     route.extend(nearest_neighbor(non_priority_list, route.pop()))
 
-    route.append("HUB")
+    if ret:
+        route.append("HUB")
 
     distance = get_route_distance(route)
 
@@ -90,8 +95,8 @@ def build_route(manifest):
 # packages.
 # Time Complexity: O(N^2)
 # Space Complexity: O(N)
-def ship(manifest, package_ids, truck, driver, time = None):
-    route, distance = build_route(manifest)
+def ship(manifest, package_ids, truck, driver, ret = False, time = None):
+    route, distance = build_route(manifest, ret)
     for package in package_ids:
         wgups_table.get_bucket(package).update_status(Status.EN_ROUTE, time)
         wgups_table.get_bucket(package).update_assigned_truck(truck.get_id())

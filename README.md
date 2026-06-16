@@ -267,7 +267,7 @@ in facility via Label Created. The routes have already been pre-planned and the 
 see the statuses at given times of the day.
 
 Given a time constraint, there is much more that can be added (such as allowing the user to traverse backwards in addition
-to forwards in time) to improve it. For the purposes of this assignment, however, what is created will satisfy.
+to forwards in time) to improve it. For the purpose of this assignment, however, what is created will satisfy.
 
 The screenshots are located in the Screenshots folder. Screenshot_one is the dashboard that shows the status of all the packages
 at 8:45, screenshot_two is the same at 9:45, and screenshot_three is the same at 12:45. Final_dashboard is a screenshot of 
@@ -275,15 +275,15 @@ the final dashboard with all packages delivered and their delivery time. Code_co
 completion with the total miles driven with exit code 0.
 
 ### SECTION F
-*ALGORITHM JUSTIFICATION*
+*ALGORITHM VERIFICATION AND JUSTIFICATION*
 
 The two algorithms used to build the routes, Nearest Neighbor and Floyd-Warshall, have many strengths. One is, Floyd-Warshall 
 is able to provide the shortest distance between all points on the graph, whether that includes an intermediate or not.
-Another is, Nearest Neighbor algorithm, in the case that is used for this application, will take the list of locations from the 
+Another is, Nearest Neighbor algorithm, in the case used for this application, will take the list of locations from the 
 manifest and continuously return the next nearest neighbor, minimizing the distance traveled. 
 
-After running the application, all packages are delivered to their designation and on time. The amount of miles traveled is
-126.3 miles. All packages notes are successfully handled (i.e. packages delivered with required packages, truck two packages).
+After running the application, all packages are delivered to their designation and on time, the number of miles traveled is 112.90 
+miles, and all packages notes are successfully handled (i.e. packages delivered with required packages, truck two packages).
 
 There are other algorithms that could have been used for this application that would also meet the requirements:
 
@@ -308,7 +308,12 @@ to the same address, I would also include packages that are within the same zipc
 in the same area.
 
 ### SECTION H
-*DATA STRUCTURE JUSTIFICATION*
+*DATA STRUCTURE VERIFICATION AND JUSTIFICATION*
+
+The Hash Table used successfully satisfies the requirements. There is an insert function that will directly insert the package
+into the correct bucket, and a get_bucket function that will return the package if it is in the table. The hash table also provides
+a resize function that will resize the table if the load factor exceeds a certain threshold. To hash a package, it will use a direct hash
+and quadratic probing. With all of this, the Hash Table satisfies the requirements.
 
 The use of the Hash Table is potentially the best option for storing the packages and their data. However, two other options
 are the use of a Linked List and a Min-Heap:
@@ -317,7 +322,7 @@ The linked list will store the information just as the Hash Table did, and inser
 at the end of the list. However, retrieval is not given that the Hash Table has a retrieval time complexity of O(1), 
 but the linked list has a time complexity of O(N) for it has to iterate through all the buckets until a match. 
 
-The other option is the Min-Heap. This will be optimal for it can store packages with a priority near the front of the list, 
+The other option is the Min-Heap. This will be optimal, for it can store packages with a priority near the front of the list, 
 always returning the earliest priority from the root. However, again, retrieval will have the same complications as that 
 of the linked list, with a time complexity of O(N). 
 
