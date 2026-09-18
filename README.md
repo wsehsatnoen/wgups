@@ -270,19 +270,19 @@ Given a time constraint, there is much more that can be added (such as allowing 
 to forwards in time) to improve it. For the purpose of this assignment, however, what is created will satisfy.
 
 Dashboard at 8:45:
-![Dashboard at 8:45](Screenshots/screenshot_one.png)
+![Dashboard at 8:45](Screenshots/Screenshot_1.png)
 
 Dashboard at 9:45:
-![Dashboard at 9:45](Screenshots/screenshot_two.png)
+![Dashboard at 9:45](Screenshots/Screenshot_2.png)
 
 Dashboard at 12:45:
-![Dashboard at 12:45](Screenshots/screenshot_three.png)
+![Dashboard at 12:45](Screenshots/Screenshot_3.png)
 
 Final Dashboard:
-![Final Dashboard](Screenshots/final_dashboard.png)
+![Final Dashboard](Screenshots/Final_Dashboard.png)
 
 Code Completion with satus of 0:
-![Code Completion](Screenshots/code_completion.png)
+![Code Completion](Screenshots/Code_Completion.png)
 
 
 ### SECTION F
